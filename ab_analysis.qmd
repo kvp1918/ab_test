@@ -1,0 +1,314 @@
+---
+title: "AB Test Results"
+format: 
+  html:
+    toc: true
+    toc_float: true
+    code-fold: true
+editor: visual
+---
+
+```{r setup, echo=FALSE, include=FALSE}
+library(tidyverse)
+library(ggpubr)
+library(plotly)
+library(reactable)
+library(janitor)
+library(lubridate)
+library(easystats)
+```
+
+## Description of the Problem
+"A company recently introduced a new bidding type,"average bidding", as an alternative to its exisiting bidding type, called "maximum bidding". One of our clients, ....com, has decided to test this new feature and wants to conduct an A/B test to understand if average bidding brings more conversions than maximum bidding.
+
+The A/B test has run for 1 month and ....com now expects you to analyze and present the results of this A/B test." - Kaggle Dataset
+
+## Framework for Analysis
+-   **Primary Objective:** Determine whether the test campaign was effective in increasing purchases.
+
+-   **Hypothesis:** Test campaign will increase purchases.
+
+-   **Primary Metric:** Number of purchases
+
+-   **Business Metrics:** Spend
+
+-   **Secondary Metrics:** Cart efficiency, impression efficiency, number of website clicks, number of content views, reach, number of impressions
+
+## Dataset
+
+The data is coming from a Kaggle dataset that can be found [here](https://www.kaggle.com/datasets/ilkeryildiz/example-dataset-for-ab-test).
+
+## Load Data
+
+```{r load_data, echo = FALSE}
+control_df <- read_delim("./data/control_group.csv", delim = ";",
+                       show_col_types = FALSE)
+test_df <- read_delim("./data/test_group.csv", delim = ";",
+                    show_col_types = FALSE)
+```
+
+```{r describe_control_data}
+control_df %>% str()
+names(control_df) %in% names(test_df)
+```
+
+```{r describe_test_data}
+test_df %>% str()
+
+names(test_df) %in% names(control_df)
+```
+
+Combine data into single dataframe
+
+```{r combine_data}
+df <- rbind(control_df %>% mutate(test = FALSE), 
+            test_df %>% mutate(test = TRUE)) %>%
+  janitor::clean_names()
+
+rm(control_df, test_df)
+```
+
+Format date
+
+```{r format_date}
+df <- df %>%
+  mutate(date = lubridate::as_date(date, format = "%d.%m.%Y"))
+```
+
+Create new variables \* Cost per conversion = spend / Number Purchased \* Cart efficiency = Number Purchased / Number Added to Cart \* Impression efficiency = Number Purchased / Number of Impressions
+
+```{r create_variables}
+df <- df %>%
+  mutate(cost_per_conversion = spend_usd / number_of_purchase,
+         cart_efficiency = number_of_purchase / number_of_add_to_cart,
+         impression_efficiency = number_of_purchase / number_of_impressions
+         )
+```
+
+## Exploratory Data Analysis
+
+### Overall Impact of Campaign
+
+What does the overall impact of test look like on key outcomes (number_of_impressions, reach, number_of_website_clicks, number_of_searches, number_of_view_content, number_of_add_to_cart, number_of_purchase)?
+
+#### Number of Impressions
+
+```{r boxplot_impressions}
+ggboxplot(df, x = "campaign_name", y = "number_of_impressions",
+          fill = "campaign_name") +
+  ggtitle("Number of Impressions") + ylab("# of Impressions") +
+  xlab("") + theme_modern() + scale_fill_material()
+```
+
+> Control campaign yeiled more overall impressions than the test campaign
+
+#### Reach
+
+```{r boxplot_reach}
+ggboxplot(df, x = "campaign_name", y = "reach",
+          fill = "campaign_name") +
+  ggtitle("Reach") + ylab("Reach") +
+  xlab("") + theme_modern() + scale_fill_material()
+```
+
+> Control campaign had greater reach than the test campaign. But the Test campaign could be more targeted and therefore we would expect fewer impressions and lower reach.
+
+#### Number of Clicks
+
+```{r boxplot_clicks}
+ggboxplot(df, x = "campaign_name", y = "number_of_website_clicks",
+          fill = "campaign_name") +
+  ggtitle("Number of Website Clicks") + ylab("# of Website Clicks") +
+  xlab("") + theme_modern() + scale_fill_material()
+```
+
+> Now we are starting to see the impact of the Test campaign. The test campaign created more clicks than the control
+
+#### Number of Searches
+
+```{r boxplot_searches}
+ggboxplot(df, x = "campaign_name", y = "number_of_searches",
+          fill = "campaign_name") +
+  ggtitle("Number of Searches") + ylab("# of Searches") +
+  xlab("") + theme_modern() + scale_fill_material()
+```
+
+> Doesn't seem to be a large difference in the number of searches. There is also an outlier in the control campaign that should be investigated.
+
+#### Number Viewed Content
+
+```{r boxplot_view_content}
+ggboxplot(df, x = "campaign_name", y = "number_of_view_content",
+          fill = "campaign_name") +
+  ggtitle("Number of View Content") + ylab("# of View Content") +
+  xlab("") + theme_modern() + scale_fill_material()
+```
+
+> Viewing content looks to overall be the same across campaigns
+
+#### Number Added to Cart
+
+```{r boxplot_add_cart}
+ggboxplot(df, x = "campaign_name", y = "number_of_add_to_cart",
+          fill = "campaign_name") +
+  ggtitle("Number of Add to Cart") + ylab("# of Add to Cart") +
+  xlab("") + theme_modern() + scale_fill_material()
+```
+
+> The control campaign led to more items added to cart than the test campaign
+
+#### Number Purchased
+
+```{r boxplot_purchase}
+ggboxplot(df, x = "campaign_name", y = "number_of_purchase",
+          fill = "campaign_name") +
+  ggtitle("Number of Purchase") + ylab("# of Purchase") +
+  xlab("") + theme_modern() + scale_fill_material()
+```
+
+> At first glance these look close, however there is a much larger spread of test campaign performance. Other factors could be contributing.
+
+#### Spend
+
+```{r boxplot_spend}
+ggboxplot(df, x = "campaign_name", y = "spend_usd",
+          fill = "campaign_name") +
+  ggtitle("Spend") + ylab("Spend (USD)") +
+  xlab("") + theme_modern() + scale_fill_material()
+```
+
+> Are we getting the results we need with a higher spend?
+
+#### Cost per Conversion
+
+```{r boxplot_cost_per_conversion}
+ggboxplot(df, x = "campaign_name", y = "cost_per_conversion",
+          fill = "campaign_name") +
+  ggtitle("Cost Per Conversion") + ylab("Cost Per Conversion (USD)") +
+  xlab("") + theme_modern() + scale_fill_material()
+```
+
+> Might be paying more for conversions with the test campaign
+
+#### Cart Efficiency
+
+```{r boxplot_cart_efficiency}
+ggboxplot(df, x = "campaign_name", y = "cart_efficiency",
+          fill = "campaign_name") +
+  ggtitle("Cart Efficiency") + ylab("Cart Efficiency") +
+  xlab("") + theme_modern() + scale_fill_material()
+```
+
+> Looks like we are getting a better conversion and purchase once added to cart
+
+#### Impression Efficiency
+
+```{r boxplot_impression_efficiency}
+ggboxplot(df, x = "campaign_name", y = "impression_efficiency", 
+          fill = "campaign_name") +
+  ggtitle("Impression Efficiency") + ylab("Impression Efficiency") +
+  xlab("") + theme_modern() + scale_fill_material()
+```
+
+> Looks like we are getting a slightly better conversion from impressions with the test campaign
+
+## Analysis
+
+### Simple Model
+Compare number of purchases by campaign
+```{r simple_model}
+model1 = lm(number_of_purchase ~ campaign_name, data = df)
+summary(model1)
+check_model(model1)
+performance(model1)
+```
+
+> No significant impact of campaign on overall number of purchases
+
+### Covariate Model
+Compare number of purchases by campaign controlling for reach, spend, and cart adds
+```{r covar_model}
+model2 = lm(number_of_purchase ~ campaign_name + reach +
+              number_of_add_to_cart + spend_usd, data = df)
+summary(model2)
+check_model(model2)
+performance(model2)
+```
+
+> No significant impact of campaign on overall number of purchases
+
+### Interaction Model
+Compare number of purchases by campaign and cart add interaction, controlling for spend
+```{r int_model}
+model3 <- lm(number_of_purchase ~ campaign_name*number_of_add_to_cart + 
+              spend_usd, data = df)
+summary(model3)
+check_model(model3)
+performance(model3)
+
+means <- estimate_means(model3)
+
+ggplot(df, aes(x = campaign_name, y = number_of_purchase)) +
+  # Add base data
+  geom_violin(aes(fill = campaign_name), color = "white") +
+  geom_jitter2(width = 0.05, alpha = 0.5) +
+
+  # Add pointrange and line from means
+  geom_line(data = means, aes(y = Mean, group = 1), size = 1) +
+  geom_pointrange(
+    data = means,
+    aes(y = Mean, ymin = CI_low, ymax = CI_high),
+    size = 1,
+    color = "white"
+  ) +
+  # Improve colors
+  scale_fill_material() +
+  theme_modern()
+
+write.csv(means, "./data/estimated_means.csv")
+
+vizdata <- modelbased::visualisation_matrix(model3, at = c("number_of_add_to_cart", "campaign_name"))
+vizdata <- modelbased::estimate_expectation(vizdata)
+
+ggplot(vizdata, aes(x = number_of_add_to_cart, y = Predicted,
+                    color = campaign_name)) + 
+  geom_line(linewidth= 2) + theme_modern() +
+  scale_color_material()
+
+write.csv(vizdata, "./data/model_predictions.csv")
+
+vizdata <- modelbased::visualisation_matrix(model3, at = c("campaign_name"))
+vizdata <- modelbased::estimate_expectation(vizdata)
+
+ggboxplot(vizdata, x = "campaign_name", y = "Predicted")
+  
+```
+
+> Overall, the absolute number of purchases were not increased by the test campaign. However, more purchases were made in the test campaign if more items were added to cart.
+
+```{r spend_model}
+model4 <- lm(number_of_purchase ~ campaign_name*spend_usd + 
+              number_of_add_to_cart, data = df)
+summary(model4)
+check_model(model4)
+performance(model4)
+
+vizdata <- modelbased::visualisation_matrix(model4, at = c("spend_usd", "campaign_name"))
+vizdata <- modelbased::estimate_expectation(vizdata)
+
+ggplot(vizdata, aes(x = spend_usd, y = Predicted,
+                    color = campaign_name)) + 
+  geom_line(linewidth= 2) + theme_modern() +
+  scale_color_material()
+
+
+
+```
+
+```{r save_data}
+write.csv(df, "./data/analysis_file.csv")
+```
+
+```{r session_info}
+sessionInfo()
+```

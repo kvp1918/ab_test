@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>AB Test Results</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="ab_analysis_files/libs/clipboard/clipboard.min.js"></script>
+<script src="ab_analysis_files/libs/quarto-html/quarto.js"></script>
+<script src="ab_analysis_files/libs/quarto-html/popper.min.js"></script>
+<script src="ab_analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="ab_analysis_files/libs/quarto-html/anchor.min.js"></script>
+<link href="ab_analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="ab_analysis_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="ab_analysis_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="ab_analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="ab_analysis_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#description-of-the-problem" id="toc-description-of-the-problem" class="nav-link active" data-scroll-target="#description-of-the-problem">Description of the Problem</a></li>
+  <li><a href="#framework-for-analysis" id="toc-framework-for-analysis" class="nav-link" data-scroll-target="#framework-for-analysis">Framework for Analysis</a></li>
+  <li><a href="#dataset" id="toc-dataset" class="nav-link" data-scroll-target="#dataset">Dataset</a></li>
+  <li><a href="#load-data" id="toc-load-data" class="nav-link" data-scroll-target="#load-data">Load Data</a></li>
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">Exploratory Data Analysis</a>
+  <ul class="collapse">
+  <li><a href="#overall-impact-of-campaign" id="toc-overall-impact-of-campaign" class="nav-link" data-scroll-target="#overall-impact-of-campaign">Overall Impact of Campaign</a></li>
+  </ul></li>
+  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a>
+  <ul class="collapse">
+  <li><a href="#simple-model" id="toc-simple-model" class="nav-link" data-scroll-target="#simple-model">Simple Model</a></li>
+  <li><a href="#covariate-model" id="toc-covariate-model" class="nav-link" data-scroll-target="#covariate-model">Covariate Model</a></li>
+  <li><a href="#interaction-model" id="toc-interaction-model" class="nav-link" data-scroll-target="#interaction-model">Interaction Model</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">AB Test Results</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="description-of-the-problem" class="level2">
+<h2 class="anchored" data-anchor-id="description-of-the-problem">Description of the Problem</h2>
+<p>“A company recently introduced a new bidding type,”average bidding”, as an alternative to its exisiting bidding type, called “maximum bidding”. One of our clients, ….com, has decided to test this new feature and wants to conduct an A/B test to understand if average bidding brings more conversions than maximum bidding.</p>
+<p>The A/B test has run for 1 month and ….com now expects you to analyze and present the results of this A/B test.” - Kaggle Dataset</p>
+</section>
+<section id="framework-for-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="framework-for-analysis">Framework for Analysis</h2>
+<ul>
+<li><p><strong>Primary Objective:</strong> Determine whether the test campaign was effective in increasing purchases.</p></li>
+<li><p><strong>Hypothesis:</strong> Test campaign will increase purchases.</p></li>
+<li><p><strong>Primary Metric:</strong> Number of purchases</p></li>
+<li><p><strong>Business Metrics:</strong> Spend</p></li>
+<li><p><strong>Secondary Metrics:</strong> Cart efficiency, impression efficiency, number of website clicks, number of content views, reach, number of impressions</p></li>
+</ul>
+</section>
+<section id="dataset" class="level2">
+<h2 class="anchored" data-anchor-id="dataset">Dataset</h2>
+<p>The data is coming from a Kaggle dataset that can be found <a href="https://www.kaggle.com/datasets/ilkeryildiz/example-dataset-for-ab-test">here</a>.</p>
+</section>
+<section id="load-data" class="level2">
+<h2 class="anchored" data-anchor-id="load-data">Load Data</h2>
+<div class="cell">
+
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>control_df <span class="sc">%&gt;%</span> <span class="fu">str</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>spc_tbl_ [30 × 10] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+ $ Campaign Name      : chr [1:30] "Control Campaign" "Control Campaign" "Control Campaign" "Control Campaign" ...
+ $ Date               : chr [1:30] "1.08.2019" "2.08.2019" "3.08.2019" "4.08.2019" ...
+ $ Spend [USD]        : num [1:30] 2280 1757 2343 1940 1835 ...
+ $ # of Impressions   : num [1:30] 82702 121040 131711 72878 NA ...
+ $ Reach              : num [1:30] 56930 102513 110862 61235 NA ...
+ $ # of Website Clicks: num [1:30] 7016 8110 6508 3065 NA ...
+ $ # of Searches      : num [1:30] 2290 2033 1737 1042 NA ...
+ $ # of View Content  : num [1:30] 2159 1841 1549 982 NA ...
+ $ # of Add to Cart   : num [1:30] 1819 1219 1134 1183 NA ...
+ $ # of Purchase      : num [1:30] 618 511 372 340 NA 764 499 462 501 734 ...
+ - attr(*, "spec")=
+  .. cols(
+  ..   `Campaign Name` = col_character(),
+  ..   Date = col_character(),
+  ..   `Spend [USD]` = col_double(),
+  ..   `# of Impressions` = col_double(),
+  ..   Reach = col_double(),
+  ..   `# of Website Clicks` = col_double(),
+  ..   `# of Searches` = col_double(),
+  ..   `# of View Content` = col_double(),
+  ..   `# of Add to Cart` = col_double(),
+  ..   `# of Purchase` = col_double()
+  .. )
+ - attr(*, "problems")=&lt;externalptr&gt; </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(control_df) <span class="sc">%in%</span> <span class="fu">names</span>(test_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>test_df <span class="sc">%&gt;%</span> <span class="fu">str</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>spc_tbl_ [30 × 10] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+ $ Campaign Name      : chr [1:30] "Test Campaign" "Test Campaign" "Test Campaign" "Test Campaign" ...
+ $ Date               : chr [1:30] "1.08.2019" "2.08.2019" "3.08.2019" "4.08.2019" ...
+ $ Spend [USD]        : num [1:30] 3008 2542 2365 2710 2297 ...
+ $ # of Impressions   : num [1:30] 39550 100719 70263 78451 114295 ...
+ $ Reach              : num [1:30] 35820 91236 45198 25937 95138 ...
+ $ # of Website Clicks: num [1:30] 3038 4657 7885 4216 5863 ...
+ $ # of Searches      : num [1:30] 1946 2359 2572 2216 2106 ...
+ $ # of View Content  : num [1:30] 1069 1548 2367 1437 858 ...
+ $ # of Add to Cart   : num [1:30] 894 879 1268 566 956 ...
+ $ # of Purchase      : num [1:30] 255 677 578 340 768 488 890 431 845 275 ...
+ - attr(*, "spec")=
+  .. cols(
+  ..   `Campaign Name` = col_character(),
+  ..   Date = col_character(),
+  ..   `Spend [USD]` = col_double(),
+  ..   `# of Impressions` = col_double(),
+  ..   Reach = col_double(),
+  ..   `# of Website Clicks` = col_double(),
+  ..   `# of Searches` = col_double(),
+  ..   `# of View Content` = col_double(),
+  ..   `# of Add to Cart` = col_double(),
+  ..   `# of Purchase` = col_double()
+  .. )
+ - attr(*, "problems")=&lt;externalptr&gt; </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(test_df) <span class="sc">%in%</span> <span class="fu">names</span>(control_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</code></pre>
+</div>
+</div>
+<p>Combine data into single dataframe</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">rbind</span>(control_df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">test =</span> <span class="cn">FALSE</span>), </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>            test_df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">test =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>()</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(control_df, test_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Format date</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> lubridate<span class="sc">::</span><span class="fu">as_date</span>(date, <span class="at">format =</span> <span class="st">"%d.%m.%Y"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Create new variables * Cost per conversion = spend / Number Purchased * Cart efficiency = Number Purchased / Number Added to Cart * Impression efficiency = Number Purchased / Number of Impressions</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cost_per_conversion =</span> spend_usd <span class="sc">/</span> number_of_purchase,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">cart_efficiency =</span> number_of_purchase <span class="sc">/</span> number_of_add_to_cart,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">impression_efficiency =</span> number_of_purchase <span class="sc">/</span> number_of_impressions</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>         )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exploratory-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h2>
+<section id="overall-impact-of-campaign" class="level3">
+<h3 class="anchored" data-anchor-id="overall-impact-of-campaign">Overall Impact of Campaign</h3>
+<p>What does the overall impact of test look like on key outcomes (number_of_impressions, reach, number_of_website_clicks, number_of_searches, number_of_view_content, number_of_add_to_cart, number_of_purchase)?</p>
+<section id="number-of-impressions" class="level4">
+<h4 class="anchored" data-anchor-id="number-of-impressions">Number of Impressions</h4>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggboxplot</span>(df, <span class="at">x =</span> <span class="st">"campaign_name"</span>, <span class="at">y =</span> <span class="st">"number_of_impressions"</span>,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">fill =</span> <span class="st">"campaign_name"</span>) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Number of Impressions"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"# of Impressions"</span>) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">theme_modern</span>() <span class="sc">+</span> <span class="fu">scale_fill_material</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/boxplot_impressions-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Control campaign yeiled more overall impressions than the test campaign</p>
+</blockquote>
+</section>
+<section id="reach" class="level4">
+<h4 class="anchored" data-anchor-id="reach">Reach</h4>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggboxplot</span>(df, <span class="at">x =</span> <span class="st">"campaign_name"</span>, <span class="at">y =</span> <span class="st">"reach"</span>,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">fill =</span> <span class="st">"campaign_name"</span>) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Reach"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Reach"</span>) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">theme_modern</span>() <span class="sc">+</span> <span class="fu">scale_fill_material</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/boxplot_reach-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Control campaign had greater reach than the test campaign. But the Test campaign could be more targeted and therefore we would expect fewer impressions and lower reach.</p>
+</blockquote>
+</section>
+<section id="number-of-clicks" class="level4">
+<h4 class="anchored" data-anchor-id="number-of-clicks">Number of Clicks</h4>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggboxplot</span>(df, <span class="at">x =</span> <span class="st">"campaign_name"</span>, <span class="at">y =</span> <span class="st">"number_of_website_clicks"</span>,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">fill =</span> <span class="st">"campaign_name"</span>) <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Number of Website Clicks"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"# of Website Clicks"</span>) <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">theme_modern</span>() <span class="sc">+</span> <span class="fu">scale_fill_material</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/boxplot_clicks-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Now we are starting to see the impact of the Test campaign. The test campaign created more clicks than the control</p>
+</blockquote>
+</section>
+<section id="number-of-searches" class="level4">
+<h4 class="anchored" data-anchor-id="number-of-searches">Number of Searches</h4>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggboxplot</span>(df, <span class="at">x =</span> <span class="st">"campaign_name"</span>, <span class="at">y =</span> <span class="st">"number_of_searches"</span>,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">fill =</span> <span class="st">"campaign_name"</span>) <span class="sc">+</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Number of Searches"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"# of Searches"</span>) <span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">theme_modern</span>() <span class="sc">+</span> <span class="fu">scale_fill_material</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/boxplot_searches-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Doesn’t seem to be a large difference in the number of searches. There is also an outlier in the control campaign that should be investigated.</p>
+</blockquote>
+</section>
+<section id="number-viewed-content" class="level4">
+<h4 class="anchored" data-anchor-id="number-viewed-content">Number Viewed Content</h4>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggboxplot</span>(df, <span class="at">x =</span> <span class="st">"campaign_name"</span>, <span class="at">y =</span> <span class="st">"number_of_view_content"</span>,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">fill =</span> <span class="st">"campaign_name"</span>) <span class="sc">+</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Number of View Content"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"# of View Content"</span>) <span class="sc">+</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">theme_modern</span>() <span class="sc">+</span> <span class="fu">scale_fill_material</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/boxplot_view_content-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Viewing content looks to overall be the same across campaigns</p>
+</blockquote>
+</section>
+<section id="number-added-to-cart" class="level4">
+<h4 class="anchored" data-anchor-id="number-added-to-cart">Number Added to Cart</h4>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggboxplot</span>(df, <span class="at">x =</span> <span class="st">"campaign_name"</span>, <span class="at">y =</span> <span class="st">"number_of_add_to_cart"</span>,</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">fill =</span> <span class="st">"campaign_name"</span>) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Number of Add to Cart"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"# of Add to Cart"</span>) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">theme_modern</span>() <span class="sc">+</span> <span class="fu">scale_fill_material</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/boxplot_add_cart-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>The control campaign led to more items added to cart than the test campaign</p>
+</blockquote>
+</section>
+<section id="number-purchased" class="level4">
+<h4 class="anchored" data-anchor-id="number-purchased">Number Purchased</h4>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggboxplot</span>(df, <span class="at">x =</span> <span class="st">"campaign_name"</span>, <span class="at">y =</span> <span class="st">"number_of_purchase"</span>,</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">fill =</span> <span class="st">"campaign_name"</span>) <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Number of Purchase"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"# of Purchase"</span>) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">theme_modern</span>() <span class="sc">+</span> <span class="fu">scale_fill_material</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/boxplot_purchase-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>At first glance these look close, however there is a much larger spread of test campaign performance. Other factors could be contributing.</p>
+</blockquote>
+</section>
+<section id="spend" class="level4">
+<h4 class="anchored" data-anchor-id="spend">Spend</h4>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggboxplot</span>(df, <span class="at">x =</span> <span class="st">"campaign_name"</span>, <span class="at">y =</span> <span class="st">"spend_usd"</span>,</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">fill =</span> <span class="st">"campaign_name"</span>) <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Spend"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Spend (USD)"</span>) <span class="sc">+</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">theme_modern</span>() <span class="sc">+</span> <span class="fu">scale_fill_material</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/boxplot_spend-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Are we getting the results we need with a higher spend?</p>
+</blockquote>
+</section>
+<section id="cost-per-conversion" class="level4">
+<h4 class="anchored" data-anchor-id="cost-per-conversion">Cost per Conversion</h4>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggboxplot</span>(df, <span class="at">x =</span> <span class="st">"campaign_name"</span>, <span class="at">y =</span> <span class="st">"cost_per_conversion"</span>,</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">fill =</span> <span class="st">"campaign_name"</span>) <span class="sc">+</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Cost Per Conversion"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Cost Per Conversion (USD)"</span>) <span class="sc">+</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">theme_modern</span>() <span class="sc">+</span> <span class="fu">scale_fill_material</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/boxplot_cost_per_conversion-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Might be paying more for conversions with the test campaign</p>
+</blockquote>
+</section>
+<section id="cart-efficiency" class="level4">
+<h4 class="anchored" data-anchor-id="cart-efficiency">Cart Efficiency</h4>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggboxplot</span>(df, <span class="at">x =</span> <span class="st">"campaign_name"</span>, <span class="at">y =</span> <span class="st">"cart_efficiency"</span>,</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">fill =</span> <span class="st">"campaign_name"</span>) <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Cart Efficiency"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Cart Efficiency"</span>) <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">theme_modern</span>() <span class="sc">+</span> <span class="fu">scale_fill_material</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/boxplot_cart_efficiency-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Looks like we are getting a better conversion and purchase once added to cart</p>
+</blockquote>
+</section>
+<section id="impression-efficiency" class="level4">
+<h4 class="anchored" data-anchor-id="impression-efficiency">Impression Efficiency</h4>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggboxplot</span>(df, <span class="at">x =</span> <span class="st">"campaign_name"</span>, <span class="at">y =</span> <span class="st">"impression_efficiency"</span>, </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">fill =</span> <span class="st">"campaign_name"</span>) <span class="sc">+</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Impression Efficiency"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Impression Efficiency"</span>) <span class="sc">+</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">theme_modern</span>() <span class="sc">+</span> <span class="fu">scale_fill_material</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/boxplot_impression_efficiency-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Looks like we are getting a slightly better conversion from impressions with the test campaign</p>
+</blockquote>
+</section>
+</section>
+</section>
+<section id="analysis" class="level2">
+<h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
+<section id="simple-model" class="level3">
+<h3 class="anchored" data-anchor-id="simple-model">Simple Model</h3>
+<p>Compare number of purchases by campaign</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">=</span> <span class="fu">lm</span>(number_of_purchase <span class="sc">~</span> campaign_name, <span class="at">data =</span> df)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = number_of_purchase ~ campaign_name, data = df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-300.79 -181.23  -21.79  171.77  368.77 
+
+Coefficients:
+                           Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                  522.79      36.90   14.17   &lt;2e-16 ***
+campaign_nameTest Campaign    -1.56      51.74   -0.03    0.976    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 198.7 on 57 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared:  1.594e-05, Adjusted R-squared:  -0.01753 
+F-statistic: 0.0009087 on 1 and 57 DF,  p-value: 0.9761</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/simple_model-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">performance</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># Indices of model performance
+
+AIC     |    AICc |     BIC |        R2 | R2 (adj.) |    RMSE |   Sigma
+-----------------------------------------------------------------------
+795.828 | 796.264 | 802.060 | 1.594e-05 |    -0.018 | 195.296 | 198.693</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>No significant impact of campaign on overall number of purchases</p>
+</blockquote>
+</section>
+<section id="covariate-model" class="level3">
+<h3 class="anchored" data-anchor-id="covariate-model">Covariate Model</h3>
+<p>Compare number of purchases by campaign controlling for reach, spend, and cart adds</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">=</span> <span class="fu">lm</span>(number_of_purchase <span class="sc">~</span> campaign_name <span class="sc">+</span> reach <span class="sc">+</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>              number_of_add_to_cart <span class="sc">+</span> spend_usd, <span class="at">data =</span> df)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = number_of_purchase ~ campaign_name + reach + number_of_add_to_cart + 
+    spend_usd, data = df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-373.01 -140.44    0.23  135.27  356.58 
+
+Coefficients:
+                            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                1.565e+02  1.919e+02   0.816  0.41834    
+campaign_nameTest Campaign 1.130e+02  6.872e+01   1.644  0.10594    
+reach                      5.308e-04  9.529e-04   0.557  0.57983    
+number_of_add_to_cart      2.332e-01  6.415e-02   3.635  0.00062 ***
+spend_usd                  6.927e-03  6.848e-02   0.101  0.91980    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 182.7 on 54 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared:  0.1989,    Adjusted R-squared:  0.1396 
+F-statistic: 3.353 on 4 and 54 DF,  p-value: 0.01596</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Variable `Component` is not in your data frame :/</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/covar_model-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">performance</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># Indices of model performance
+
+AIC     |    AICc |     BIC |    R2 | R2 (adj.) |    RMSE |   Sigma
+-------------------------------------------------------------------
+788.741 | 790.357 | 801.206 | 0.199 |     0.140 | 174.795 | 182.708</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>No significant impact of campaign on overall number of purchases</p>
+</blockquote>
+</section>
+<section id="interaction-model" class="level3">
+<h3 class="anchored" data-anchor-id="interaction-model">Interaction Model</h3>
+<p>Compare number of purchases by campaign and cart add interaction, controlling for spend</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>model3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(number_of_purchase <span class="sc">~</span> campaign_name<span class="sc">*</span>number_of_add_to_cart <span class="sc">+</span> </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>              spend_usd, <span class="at">data =</span> df)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = number_of_purchase ~ campaign_name * number_of_add_to_cart + 
+    spend_usd, data = df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-301.46 -110.58   10.19  117.99  272.64 
+
+Coefficients:
+                                                   Estimate Std. Error t value
+(Intercept)                                       504.45654  176.84634   2.853
+campaign_nameTest Campaign                       -376.05752  130.96963  -2.871
+number_of_add_to_cart                               0.03939    0.07522   0.524
+spend_usd                                          -0.01426    0.06066  -0.235
+campaign_nameTest Campaign:number_of_add_to_cart    0.44771    0.11530   3.883
+                                                 Pr(&gt;|t|)    
+(Intercept)                                      0.006135 ** 
+campaign_nameTest Campaign                       0.005828 ** 
+number_of_add_to_cart                            0.602698    
+spend_usd                                        0.814985    
+campaign_nameTest Campaign:number_of_add_to_cart 0.000283 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 162 on 54 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared:  0.3702,    Adjusted R-squared:  0.3235 
+F-statistic: 7.935 on 4 and 54 DF,  p-value: 4.168e-05</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Variable `Component` is not in your data frame :/</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/int_model-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">performance</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># Indices of model performance
+
+AIC     |    AICc |     BIC |    R2 | R2 (adj.) |    RMSE |   Sigma
+-------------------------------------------------------------------
+774.551 | 776.166 | 787.016 | 0.370 |     0.324 | 154.990 | 162.006</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>means <span class="ot">&lt;-</span> <span class="fu">estimate_means</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>We selected `at = c("campaign_name")`.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>NOTE: Results may be misleading due to involvement in interactions</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> campaign_name, <span class="at">y =</span> number_of_purchase)) <span class="sc">+</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add base data</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="fu">aes</span>(<span class="at">fill =</span> campaign_name), <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter2</span>(<span class="at">width =</span> <span class="fl">0.05</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add pointrange and line from means</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> means, <span class="fu">aes</span>(<span class="at">y =</span> Mean, <span class="at">group =</span> <span class="dv">1</span>), <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> means,</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> Mean, <span class="at">ymin =</span> CI_low, <span class="at">ymax =</span> CI_high),</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"white"</span></span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Improve colors</span></span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_material</span>() <span class="sc">+</span></span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_modern</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 rows containing non-finite values (`stat_ydensity()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 rows containing missing values (`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/int_model-2.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(means, <span class="st">"./data/estimated_means.csv"</span>)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>vizdata <span class="ot">&lt;-</span> modelbased<span class="sc">::</span><span class="fu">visualisation_matrix</span>(model3, <span class="at">at =</span> <span class="fu">c</span>(<span class="st">"number_of_add_to_cart"</span>, <span class="st">"campaign_name"</span>))</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>vizdata <span class="ot">&lt;-</span> modelbased<span class="sc">::</span><span class="fu">estimate_expectation</span>(vizdata)</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(vizdata, <span class="fu">aes</span>(<span class="at">x =</span> number_of_add_to_cart, <span class="at">y =</span> Predicted,</span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">color =</span> campaign_name)) <span class="sc">+</span> </span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth=</span> <span class="dv">2</span>) <span class="sc">+</span> <span class="fu">theme_modern</span>() <span class="sc">+</span></span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_material</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/int_model-3.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(vizdata, <span class="st">"./data/model_predictions.csv"</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>vizdata <span class="ot">&lt;-</span> modelbased<span class="sc">::</span><span class="fu">visualisation_matrix</span>(model3, <span class="at">at =</span> <span class="fu">c</span>(<span class="st">"campaign_name"</span>))</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>vizdata <span class="ot">&lt;-</span> modelbased<span class="sc">::</span><span class="fu">estimate_expectation</span>(vizdata)</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggboxplot</span>(vizdata, <span class="at">x =</span> <span class="st">"campaign_name"</span>, <span class="at">y =</span> <span class="st">"Predicted"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/int_model-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Overall, the absolute number of purchases were not increased by the test campaign. However, more purchases were made in the test campaign if more items were added to cart.</p>
+</blockquote>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>model4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(number_of_purchase <span class="sc">~</span> campaign_name<span class="sc">*</span>spend_usd <span class="sc">+</span> </span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>              number_of_add_to_cart, <span class="at">data =</span> df)</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = number_of_purchase ~ campaign_name * spend_usd + 
+    number_of_add_to_cart, data = df)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-355.5 -138.3    4.8  127.3  347.0 
+
+Coefficients:
+                                      Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                          129.41188  241.06561   0.537 0.593588    
+campaign_nameTest Campaign           230.89096  341.34775   0.676 0.501668    
+spend_usd                              0.03884    0.09522   0.408 0.684966    
+number_of_add_to_cart                  0.23376    0.06446   3.627 0.000637 ***
+campaign_nameTest Campaign:spend_usd  -0.05645    0.13689  -0.412 0.681699    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 182.9 on 54 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared:  0.1969,    Adjusted R-squared:  0.1374 
+F-statistic: 3.309 on 4 and 54 DF,  p-value: 0.01697</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(model4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Variable `Component` is not in your data frame :/</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/spend_model-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">performance</span>(model4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># Indices of model performance
+
+AIC     |    AICc |     BIC |    R2 | R2 (adj.) |    RMSE |   Sigma
+-------------------------------------------------------------------
+788.894 | 790.509 | 801.359 | 0.197 |     0.137 | 175.021 | 182.944</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>vizdata <span class="ot">&lt;-</span> modelbased<span class="sc">::</span><span class="fu">visualisation_matrix</span>(model4, <span class="at">at =</span> <span class="fu">c</span>(<span class="st">"spend_usd"</span>, <span class="st">"campaign_name"</span>))</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>vizdata <span class="ot">&lt;-</span> modelbased<span class="sc">::</span><span class="fu">estimate_expectation</span>(vizdata)</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(vizdata, <span class="fu">aes</span>(<span class="at">x =</span> spend_usd, <span class="at">y =</span> Predicted,</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">color =</span> campaign_name)) <span class="sc">+</span> </span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth=</span> <span class="dv">2</span>) <span class="sc">+</span> <span class="fu">theme_modern</span>() <span class="sc">+</span></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_material</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="ab_analysis_files/figure-html/spend_model-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(df, <span class="st">"./data/analysis_file.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.2.3 (2023-03-15)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 20.04.5 LTS
+
+Matrix products: default
+BLAS:   /usr/lib/x86_64-linux-gnu/atlas/libblas.so.3.10.3
+LAPACK: /usr/lib/x86_64-linux-gnu/atlas/liblapack.so.3.10.3
+
+locale:
+ [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
+ [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   
+ [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          
+[10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] see_0.7.4          report_0.5.6       parameters_0.20.2  performance_0.10.2
+ [5] modelbased_0.8.6   insight_0.19.0     effectsize_0.8.3   datawizard_0.6.5  
+ [9] correlation_0.8.3  bayestestR_0.13.0  easystats_0.6.0    janitor_2.2.0     
+[13] reactable_0.4.4    plotly_4.10.1      ggpubr_0.6.0       lubridate_1.9.2   
+[17] forcats_1.0.0      stringr_1.5.0      dplyr_1.1.0        purrr_1.0.1       
+[21] readr_2.1.4        tidyr_1.3.0        tibble_3.2.0       ggplot2_3.4.1     
+[25] tidyverse_2.0.0   
+
+loaded via a namespace (and not attached):
+ [1] httr_1.4.5         splines_4.2.3      bit64_4.0.5        vroom_1.6.1       
+ [5] jsonlite_1.8.4     viridisLite_0.4.1  carData_3.0-5      ggrepel_0.9.3     
+ [9] yaml_2.3.7         lattice_0.20-45    pillar_1.8.1       backports_1.4.1   
+[13] glue_1.6.2         digest_0.6.31      ggsignif_0.6.4     snakecase_0.11.0  
+[17] colorspace_2.1-0   Matrix_1.5-3       htmltools_0.5.4    pkgconfig_2.0.3   
+[21] broom_1.0.4        xtable_1.8-4       mvtnorm_1.1-3      patchwork_1.1.2   
+[25] scales_1.2.1       tzdb_0.3.0         timechange_0.2.0   emmeans_1.8.5     
+[29] mgcv_1.8-42        farver_2.1.1       generics_0.1.3     car_3.1-1         
+[33] ellipsis_0.3.2     withr_2.5.0        lazyeval_0.2.2     cli_3.6.0         
+[37] magrittr_2.0.3     crayon_1.5.2       estimability_1.4.1 evaluate_0.20     
+[41] fansi_1.0.4        nlme_3.1-162       rstatix_0.7.2      tools_4.2.3       
+[45] data.table_1.14.8  hms_1.1.2          lifecycle_1.0.3    munsell_0.5.0     
+[49] compiler_4.2.3     rlang_1.1.0        grid_4.2.3         rstudioapi_0.14   
+[53] htmlwidgets_1.6.1  labeling_0.4.2     rmarkdown_2.20     gtable_0.3.1      
+[57] abind_1.4-5        R6_2.5.1           knitr_1.42         fastmap_1.1.1     
+[61] bit_4.0.5          utf8_1.2.3         stringi_1.7.12     Rcpp_1.0.10       
+[65] parallel_4.2.3     vctrs_0.5.2        tidyselect_1.2.0   xfun_0.37         </code></pre>
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
